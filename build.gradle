@@ -38,6 +38,7 @@ dependencies {
             'org.slf4j:slf4j-simple:2.0.7',
             "org.assertj:assertj-core:3.24.2",
             "com.codeborne:selenide:$selenideVersion",
+            'org.aeonbits.owner:owner:1.0.4'
     )
 
 
