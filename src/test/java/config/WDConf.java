@@ -19,5 +19,6 @@ public class WDConf {
         if (dataConfig.remote()) {
             Configuration.remote = dataConfig.remoteUrl();
         }
+
     }
 }
