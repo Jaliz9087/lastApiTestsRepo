@@ -10,4 +10,16 @@ public class Booking {
     private boolean depositpaid;
     private BookingDates bookingdates;
     private String additionalneeds;
+
+
+    public Booking(String firstname, String lastname, int totalprice, boolean depositpaid, BookingDates bookingdates, String additionalneeds) {
+        this.firstname = firstname;
+        this.lastname = lastname;
+        this.totalprice = totalprice;
+        this.depositpaid = depositpaid;
+        this.bookingdates = bookingdates;
+        this.additionalneeds = additionalneeds;
+    }
+
+
 }

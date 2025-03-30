@@ -1,7 +1,6 @@
 package tests;
 
-import io.qameta.allure.Description;
-import io.qameta.allure.Owner;
+import io.qameta.allure.*;
 import models.*;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -15,12 +14,16 @@ import static io.restassured.RestAssured.given;
 import static org.junit.jupiter.api.Assertions.*;
 
 @Owner("-whey-")
+@Epic("Booking API Tests")
+@Feature("CRUD operations")
 public class Sm {
     private static final Logger log = LoggerFactory.getLogger(Sm.class);
     private static String token;
+    private static int bookingId;
 
     @BeforeAll
     @Description("Получение токена перед тестами")
+    @Step("Запрашиваем токен авторизации")
     public static void setToken() {
         RequestCreateToken request = new RequestCreateToken();
         request.setUsername("admin");
@@ -43,8 +46,9 @@ public class Sm {
 
     @Test
     @Description("Получение списка бронирований по имени")
+    @Step("Получаем список бронирований по имени")
     public void testGetBookingsByFirstname() {
-        List<SingleBookingId> bookingIds = given()
+        BookingIds bookingResponse = given()
                 .spec(BookingSpec.getRequestSpec())
                 .queryParam("firstname", "Jim")
                 .when()
@@ -52,29 +56,21 @@ public class Sm {
                 .then()
                 .spec(BookingSpec.getBookingListSpec())
                 .extract()
-                .jsonPath()
-                .getList(".", SingleBookingId.class);
+                .as(BookingIds.class);
 
+        List<Integer> bookingIds = bookingResponse.getBookingid();
         log.info("Найденные booking IDs: {}", bookingIds);
 
         assertNotNull(bookingIds, "Список бронирований не должен быть пустым!");
-        assertFalse(bookingIds.isEmpty(), "Список бронирований должен содержать элементы.");
+        assertTrue(bookingIds.size() > 0, "Список бронирований должен содержать элементы.");
     }
 
     @Test
     @Description("Создание нового бронирования")
+    @Step("Создаём новое бронирование")
     public void testCreateBooking() {
-        BookingDates bookingDates = new BookingDates();
-        bookingDates.setCheckin("2018-01-01");
-        bookingDates.setCheckout("2019-01-01");
-
-        Booking booking = new Booking();
-        booking.setFirstname("Jim");
-        booking.setLastname("Brown");
-        booking.setTotalprice(111);
-        booking.setDepositpaid(true);
-        booking.setBookingdates(bookingDates);
-        booking.setAdditionalneeds("Breakfast");
+        BookingDates bookingDates = new BookingDates("2018-01-01", "2019-01-01");
+        Booking booking = new Booking("Jim", "Brown", 111, true, bookingDates, "Breakfast");
 
         BookingResponse response = given()
                 .spec(BookingSpec.getRequestSpec())
@@ -86,26 +82,17 @@ public class Sm {
                 .extract()
                 .as(BookingResponse.class);
 
-        assertNotNull(response.getBookingid(), "Booking ID не должен быть null!");
-        log.info("Бронирование успешно создано. ID: {}", response.getBookingid());
+        bookingId = response.getBookingid();
+        assertNotNull(bookingId, "Booking ID не должен быть null!");
+        log.info("Бронирование успешно создано. ID: {}", bookingId);
     }
 
     @Test
     @Description("Обновление существующего бронирования")
+    @Step("Обновляем бронирование по ID")
     public void testUpdateBooking() {
-        BookingDates newDates = new BookingDates();
-        newDates.setCheckin("2022-01-01");
-        newDates.setCheckout("2022-01-10");
-
-        BookingUpdate updatedBooking = new BookingUpdate();
-        updatedBooking.setFirstname("James");
-        updatedBooking.setLastname("Brown");
-        updatedBooking.setTotalprice(150);
-        updatedBooking.setDepositpaid(false);
-        updatedBooking.setBookingdates(newDates);
-        updatedBooking.setAdditionalneeds("Late checkout");
-
-        int bookingId = 1;
+        BookingDates newDates = new BookingDates("2022-01-01", "2022-01-10");
+        BookingUpdate updatedBooking = new BookingUpdate("James", "Brown", 150, false, newDates, "Late checkout");
 
         BookingUpdate response = given()
                 .spec(BookingSpec.getRequestSpecWithToken(token))
@@ -117,6 +104,11 @@ public class Sm {
                 .extract()
                 .as(BookingUpdate.class);
 
+        validateUpdatedBooking(response);
+    }
+
+    @Step("Проверяем обновленные данные бронирования")
+    private void validateUpdatedBooking(BookingUpdate response) {
         assertEquals("James", response.getFirstname(), "Имя не обновлено!");
         assertEquals("Brown", response.getLastname(), "Фамилия не обновлена!");
         assertEquals(150, response.getTotalprice(), "Цена не обновлена!");

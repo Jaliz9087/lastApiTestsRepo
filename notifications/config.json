@@ -1,9 +1,9 @@
 {
   "base": {
     "logo": "",
-    "project": "whey-WBTest-QG14",
-    "environment": "Wildberries",
-    "comment": "=)",
+    "project": "whey-DiplomApi",
+    "environment": "Api Part",
+    "comment": "well done",
     "reportLink": "",
     "language": "en",
     "allureFolder": "allure-report",
