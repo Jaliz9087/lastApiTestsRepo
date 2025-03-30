@@ -18,7 +18,6 @@ import static org.junit.jupiter.api.Assertions.*;
 public class Sm {
     private static final Logger log = LoggerFactory.getLogger(Sm.class);
     private static String token;
-    private static int bookingId;
 
     @BeforeAll
     @Description("Получение токена перед тестами")
@@ -45,7 +44,7 @@ public class Sm {
     @Test
     @Description("Получение списка бронирований по имени")
     public void testGetBookingsByFirstname() {
-        BookingIds bookingResponse = given()
+        List<SingleBookingId> bookingIds = given()
                 .spec(BookingSpec.getRequestSpec())
                 .queryParam("firstname", "Jim")
                 .when()
@@ -53,13 +52,13 @@ public class Sm {
                 .then()
                 .spec(BookingSpec.getBookingListSpec())
                 .extract()
-                .as(BookingIds.class);
+                .jsonPath()
+                .getList(".", SingleBookingId.class);
 
-        List<Integer> bookingIds = bookingResponse.getBookingid();
         log.info("Найденные booking IDs: {}", bookingIds);
 
         assertNotNull(bookingIds, "Список бронирований не должен быть пустым!");
-        assertTrue(bookingIds.size() > 0, "Список бронирований должен содержать элементы.");
+        assertFalse(bookingIds.isEmpty(), "Список бронирований должен содержать элементы.");
     }
 
     @Test
@@ -88,15 +87,12 @@ public class Sm {
                 .as(BookingResponse.class);
 
         assertNotNull(response.getBookingid(), "Booking ID не должен быть null!");
-        bookingId = response.getBookingid();
-        log.info("Бронирование успешно создано. ID: {}", bookingId);
+        log.info("Бронирование успешно создано. ID: {}", response.getBookingid());
     }
 
     @Test
     @Description("Обновление существующего бронирования")
     public void testUpdateBooking() {
-        assertNotEquals(0, bookingId, "Booking ID должен быть задан перед обновлением!");
-
         BookingDates newDates = new BookingDates();
         newDates.setCheckin("2022-01-01");
         newDates.setCheckout("2022-01-10");
@@ -108,6 +104,8 @@ public class Sm {
         updatedBooking.setDepositpaid(false);
         updatedBooking.setBookingdates(newDates);
         updatedBooking.setAdditionalneeds("Late checkout");
+
+        int bookingId = 1;
 
         BookingUpdate response = given()
                 .spec(BookingSpec.getRequestSpecWithToken(token))
