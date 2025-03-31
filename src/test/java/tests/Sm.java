@@ -2,12 +2,14 @@ package tests;
 
 import com.codeborne.selenide.logevents.SelenideLogger;
 import io.qameta.allure.*;
+import io.qameta.allure.junit5.AllureJunit5;
 import io.qameta.allure.selenide.AllureSelenide;
 import models.*;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import spec.BookingSpec;
@@ -21,6 +23,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @Owner("-whey-")
 @Epic("Booking API Tests")
 @Feature("CRUD operations")
+@ExtendWith(AllureJunit5.class)
 public class Sm {
     private static final Logger log = LoggerFactory.getLogger(Sm.class);
     private static String token;
@@ -30,10 +33,6 @@ public class Sm {
     @DisplayName("Добавляем AllureSelenide Listener")
     void setupAllureListener() {
         SelenideLogger.addListener("AllureSelenide", new AllureSelenide().screenshots(true).savePageSource(true));
-    }
-    @BeforeAll
-    static void setupAllure() {
-        AllureLifecycle lifecycle = Allure.getLifecycle();
     }
 
     @BeforeAll
