@@ -1,8 +1,10 @@
 package tests;
 
+import com.codeborne.selenide.logevents.SelenideLogger;
 import io.qameta.allure.*;
 import models.*;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,6 +14,7 @@ import java.util.List;
 
 import static io.restassured.RestAssured.given;
 import static org.junit.jupiter.api.Assertions.*;
+import io.qameta.allure.selenide.AllureSelenide;
 
 @Owner("-whey-")
 @Epic("Booking API Tests")
@@ -20,10 +23,14 @@ public class Sm {
     private static final Logger log = LoggerFactory.getLogger(Sm.class);
     private static String token;
     private static int bookingId;
-
+    @BeforeEach
+    void beforeEach() {
+        SelenideLogger.addListener("AllureSelenide", new AllureSelenide());
+    }
     @BeforeAll
     @Description("Получение токена перед тестами")
     @Step("Запрашиваем токен авторизации")
+
     public static void setToken() {
         RequestCreateToken request = new RequestCreateToken();
         request.setUsername("admin");
