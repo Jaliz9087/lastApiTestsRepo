@@ -20,21 +20,21 @@ public class WebTestBase {
     private WDConf wdConf;
 
 
-    // Инициализация конфигурации перед всеми тестами
+
     @BeforeAll
     static void configParams() {
-        DConf dConf = ConfigFactory.create(DConf.class); // Используем ConfigFactory для создания экземпляра конфигурации
-        WDConf wdConf = new WDConf(dConf); // Передаем полученную конфигурацию в WDConf
-        wdConf.configure();  // Теперь вызываем configure(), а не dataConfig()
+        DConf dConf = ConfigFactory.create(DConf.class);
+        WDConf wdConf = new WDConf(dConf);
+        wdConf.configure();
     }
 
-    // Добавляем слушатель Allure для Selenide
+
     @BeforeEach
     void addSelenideListener() {
         SelenideLogger.addListener("allure", new AllureSelenide());
     }
 
-    // Добавляем аттачменты после каждого теста
+
     @AfterEach
     void addAttachments() {
         if (isRemote || "remote".equals(environment)) {
