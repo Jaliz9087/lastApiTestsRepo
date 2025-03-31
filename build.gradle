@@ -2,6 +2,7 @@ plugins {
     id 'java-library'
     id 'io.qameta.allure' version '2.11.2'
     id "io.freefair.lombok" version "8.12.1"
+
 }
 
 repositories {
@@ -39,7 +40,8 @@ dependencies {
             "org.assertj:assertj-core:3.24.2",
             "com.codeborne:selenide:$selenideVersion",
             'org.aeonbits.owner:owner:1.0.4',
-            "io.qameta.allure:allure-selenide:2.24.0"
+            "io.qameta.allure:allure-selenide:2.24.0",
+            'io.qameta.allure:allure-junit5:2.21.0'
     )
 
 
