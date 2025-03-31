@@ -23,7 +23,6 @@ import static org.junit.jupiter.api.Assertions.*;
 @Owner("-whey-")
 @Epic("Booking API Tests")
 @Feature("CRUD operations")
-@ExtendWith(AllureJunit5.class)
 public class Sm {
     private static final Logger log = LoggerFactory.getLogger(Sm.class);
     private static String token;
