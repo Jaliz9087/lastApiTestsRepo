@@ -31,6 +31,10 @@ public class Sm {
     void setupAllureListener() {
         SelenideLogger.addListener("AllureSelenide", new AllureSelenide().screenshots(true).savePageSource(true));
     }
+    @BeforeAll
+    static void setupAllure() {
+        AllureLifecycle lifecycle = Allure.getLifecycle();
+    }
 
     @BeforeAll
     @Description("Получение токена перед тестами")
