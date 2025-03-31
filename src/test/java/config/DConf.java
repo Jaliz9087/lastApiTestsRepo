@@ -1,8 +1,6 @@
-
 package config;
 
 import org.aeonbits.owner.Config;
-
 import static com.codeborne.selenide.Browsers.CHROME;
 
 @Config.Sources({
@@ -10,6 +8,7 @@ import static com.codeborne.selenide.Browsers.CHROME;
         "classpath:remote-config.properties"
 })
 public interface DConf extends Config {
+
     @Key("baseUrl")
     @DefaultValue("https://restful-booker.herokuapp.com")
     String getBaseUrl();
@@ -31,5 +30,6 @@ public interface DConf extends Config {
     boolean remote();
 
     @Key("remoteUrl")
+    @DefaultValue("") // Optional, or set some fallback value
     String remoteUrl();
 }
