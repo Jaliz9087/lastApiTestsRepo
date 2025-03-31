@@ -2,6 +2,7 @@ package tests;
 
 import com.codeborne.selenide.logevents.SelenideLogger;
 import io.qameta.allure.*;
+import io.qameta.allure.selenide.AllureSelenide;
 import models.*;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,7 +15,6 @@ import java.util.List;
 
 import static io.restassured.RestAssured.given;
 import static org.junit.jupiter.api.Assertions.*;
-import io.qameta.allure.selenide.AllureSelenide;
 
 @Owner("-whey-")
 @Epic("Booking API Tests")
@@ -23,18 +23,21 @@ public class Sm {
     private static final Logger log = LoggerFactory.getLogger(Sm.class);
     private static String token;
     private static int bookingId;
+
     @BeforeEach
-    void beforeEach() {
-        SelenideLogger.addListener("AllureSelenide", new AllureSelenide());
+    @Step("Добавляем AllureSelenide Listener")
+    void setupAllureListener() {
+        SelenideLogger.addListener("AllureSelenide", new AllureSelenide().screenshots(true).savePageSource(true));
     }
+
     @BeforeAll
     @Description("Получение токена перед тестами")
     @Step("Запрашиваем токен авторизации")
-
     public static void setToken() {
         RequestCreateToken request = new RequestCreateToken();
         request.setUsername("admin");
         request.setPassword("password123");
+
 
         Token authResponse = given()
                 .spec(BookingSpec.getRequestSpec())
@@ -53,23 +56,28 @@ public class Sm {
 
     @Test
     @Description("Получение списка бронирований по имени")
-    @Step("Получаем список бронирований по имени")
+    @Step("Получаем список бронирований по имени 'Jim'")
     public void testGetBookingsByFirstname() {
-        BookingIds bookingResponse = given()
-                .spec(BookingSpec.getRequestSpec())
-                .queryParam("firstname", "Jim")
-                .when()
-                .get("/booking")
-                .then()
-                .spec(BookingSpec.getBookingListSpec())
-                .extract()
-                .as(BookingIds.class);
+        BookingIds bookingResponse = getBookingsByFirstname("Jim");
 
         List<Integer> bookingIds = bookingResponse.getBookingid();
         log.info("Найденные booking IDs: {}", bookingIds);
 
         assertNotNull(bookingIds, "Список бронирований не должен быть пустым!");
         assertTrue(bookingIds.size() > 0, "Список бронирований должен содержать элементы.");
+    }
+
+    @Step("Запрашиваем список бронирований по имени {firstname}")
+    private BookingIds getBookingsByFirstname(String firstname) {
+        return given()
+                .spec(BookingSpec.getRequestSpec())
+                .queryParam("firstname", firstname)
+                .when()
+                .get("/booking")
+                .then()
+                .spec(BookingSpec.getBookingListSpec())
+                .extract()
+                .as(BookingIds.class);
     }
 
     @Test
@@ -79,6 +87,13 @@ public class Sm {
         BookingDates bookingDates = new BookingDates("2018-01-01", "2019-01-01");
         Booking booking = new Booking("Jim", "Brown", 111, true, bookingDates, "Breakfast");
 
+        bookingId = createBooking(booking);
+        assertNotNull(bookingId, "Booking ID не должен быть null!");
+        log.info("Бронирование успешно создано. ID: {}", bookingId);
+    }
+
+    @Step("Отправляем запрос на создание бронирования")
+    private int createBooking(Booking booking) {
         BookingResponse response = given()
                 .spec(BookingSpec.getRequestSpec())
                 .body(booking)
@@ -89,19 +104,23 @@ public class Sm {
                 .extract()
                 .as(BookingResponse.class);
 
-        bookingId = response.getBookingid();
-        assertNotNull(bookingId, "Booking ID не должен быть null!");
-        log.info("Бронирование успешно создано. ID: {}", bookingId);
+        return response.getBookingid();
     }
 
     @Test
     @Description("Обновление существующего бронирования")
-    @Step("Обновляем бронирование по ID")
+    @Step("Обновляем бронирование по ID {bookingId}")
     public void testUpdateBooking() {
         BookingDates newDates = new BookingDates("2022-01-01", "2022-01-10");
         BookingUpdate updatedBooking = new BookingUpdate("James", "Brown", 150, false, newDates, "Late checkout");
 
-        BookingUpdate response = given()
+        BookingUpdate response = updateBooking(bookingId, updatedBooking);
+        validateUpdatedBooking(response);
+    }
+
+    @Step("Отправляем запрос на обновление бронирования ID {bookingId}")
+    private BookingUpdate updateBooking(int bookingId, BookingUpdate updatedBooking) {
+        return given()
                 .spec(BookingSpec.getRequestSpecWithToken(token))
                 .body(updatedBooking)
                 .when()
@@ -110,8 +129,6 @@ public class Sm {
                 .spec(BookingSpec.getBookingUpdateSpec())
                 .extract()
                 .as(BookingUpdate.class);
-
-        validateUpdatedBooking(response);
     }
 
     @Step("Проверяем обновленные данные бронирования")
