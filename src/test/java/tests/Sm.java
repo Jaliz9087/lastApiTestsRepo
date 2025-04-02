@@ -31,7 +31,7 @@ public class Sm {
     @BeforeEach
     @DisplayName("Добавляем AllureSelenide Listener")
     void setupAllureListener() {
-        SelenideLogger.addListener("AllureSelenide", new AllureSelenide().screenshots(true).savePageSource(true));
+        SelenideLogger.addListener("allure", new AllureSelenide());
     }
 
     @BeforeAll
