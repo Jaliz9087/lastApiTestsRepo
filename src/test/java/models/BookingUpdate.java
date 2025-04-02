@@ -1,8 +1,12 @@
 package models;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class BookingUpdate {
     private String firstname;
     private String lastname;
@@ -10,15 +14,4 @@ public class BookingUpdate {
     private boolean depositpaid;
     private BookingDates bookingdates;
     private String additionalneeds;
-
-
-    public BookingUpdate(String firstname, String lastname, int totalprice, boolean depositpaid, BookingDates bookingdates, String additionalneeds) {
-        this.firstname = firstname;
-        this.lastname = lastname;
-        this.totalprice = totalprice;
-        this.depositpaid = depositpaid;
-        this.bookingdates = bookingdates;
-        this.additionalneeds = additionalneeds;
-    }
-
 }

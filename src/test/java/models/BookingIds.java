@@ -5,5 +5,5 @@ import java.util.List;
 
 @Data
 public class BookingIds {
-    private List<Integer> bookingid;
+    private List<BookingId> bookings;
 }

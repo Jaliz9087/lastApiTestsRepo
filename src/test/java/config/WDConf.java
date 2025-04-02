@@ -12,7 +12,7 @@ public class WDConf {
 
 
     public void configure() {
-        Configuration.holdBrowserOpen = true;
+        //Configuration.holdBrowserOpen = true;
         Configuration.pageLoadStrategy = "eager";
         Configuration.baseUrl = dataConfig.getBaseUrl();
         Configuration.browser = dataConfig.getBrowser();

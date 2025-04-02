@@ -1,6 +1,6 @@
 package spec;
 
-import helpers.AllureListener;
+import helpers.CustomAllureListener;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.builder.ResponseSpecBuilder;
 import io.restassured.filter.log.LogDetail;
@@ -17,7 +17,7 @@ public class BookingSpec {
         return new RequestSpecBuilder()
                 .setBaseUri("https://restful-booker.herokuapp.com")
                 .setContentType(ContentType.JSON)
-                .addFilter(AllureListener.withCustomTemplates()) // Добавляем Allure-фильтр
+                .addFilter(CustomAllureListener.withCustomTemplates()) // Добавляем Allure-фильтр
                 .log(LogDetail.ALL)
                 .build();
     }
@@ -57,8 +57,14 @@ public class BookingSpec {
                 .expectContentType(ContentType.JSON)
                 .expectBody("firstname", notNullValue())
                 .expectBody("lastname", notNullValue())
+                .expectBody("totalprice", notNullValue())
+                .expectBody("depositpaid", notNullValue())
+                .expectBody("bookingdates.checkin", notNullValue()) // Исправлено
+                .expectBody("bookingdates.checkout", notNullValue()) // Исправлено
+                .expectBody("additionalneeds", notNullValue())
                 .build();
     }
+
     private static final String BASE_URL = "https://restful-booker.herokuapp.com";
 
     public static RequestSpecification getRequestSpec2() {
@@ -73,7 +79,7 @@ public class BookingSpec {
                 .setBaseUri(BASE_URL)
                 .setContentType("application/json")
                 .addHeader("Cookie", "token=" + token)
-                .addFilter(AllureListener.withCustomTemplates()) // Добавляем Allure-фильтр
+                .addFilter(CustomAllureListener.withCustomTemplates()) // Добавляем Allure-фильтр
                 .log(LogDetail.ALL)
                 .build();
     }
