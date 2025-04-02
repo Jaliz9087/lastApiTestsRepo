@@ -8,6 +8,7 @@ import io.restassured.http.ContentType;
 import io.restassured.specification.RequestSpecification;
 import io.restassured.specification.ResponseSpecification;
 
+import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.notNullValue;
 
@@ -104,4 +105,11 @@ public class BookingSpec {
 //                .setContentType("application/json")
 //                .build();
 //    }
+public static RequestSpecification getReq(String token) {
+    return given()
+            .baseUri("https://restful-booker.herokuapp.com")
+            .basePath("/booking")
+            .contentType(ContentType.JSON)
+            .header("Authorization", "Basic " + token); // передаем токен для авторизации
+}
 }

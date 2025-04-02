@@ -129,5 +129,28 @@ public class Sm {
         assertThat(response.getAdditionalneeds()).isEqualTo("Late checkout");
 
         log.info("Booking ID {} successfully updated!", bookingId);
+
     }
+    @Test
+    @Tag("booking")
+    @Tag("positive")
+    @Severity(SeverityLevel.NORMAL)
+    @DisplayName("Delete Booking by ID")
+    void deleteBookingTest() {
+        int bookingId = 1;
+
+
+        String responseMessage = given()
+                .spec(BookingSpec.getRequestSpecWithToken(token))
+                .when()
+                .delete("/" + bookingId)
+                .then()
+                .statusCode(200)  // Проверка, что статус ответа 200
+                .extract()
+                .asString();  // Получаем ответ как строку
+
+        // Проверяем, что ответ "OK", что означает успешное удаление
+        assertEquals("OK", responseMessage, "Удаление бронирования не было успешным");
+    }
+
 }
