@@ -1,9 +1,11 @@
-package models;
-
-import lombok.Data;
-import java.util.List;
-
-@Data
 public class BookingIds {
-    private List<BookingId> bookings;
+    private int bookingid;
+
+    public int getBookingid() {
+        return bookingid;
+    }
+
+    public void setBookingid(int bookingid) {
+        this.bookingid = bookingid;
+    }
 }

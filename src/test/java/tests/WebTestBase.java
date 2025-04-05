@@ -5,7 +5,6 @@ import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.logevents.SelenideLogger;
 import config.DConf;
 import config.WDConf;
-import helpers.Attachments2;
 
 import io.qameta.allure.selenide.AllureSelenide;
 import org.aeonbits.owner.ConfigFactory;
@@ -36,20 +35,5 @@ public class WebTestBase {
     }
 
 
-    @AfterEach
-    void addAttachments() {
-        if (isRemote || "remote".equals(environment)) {
-            if (!Configuration.browser.equals("firefox")) {
-                Attachments2.screenshotAs("Test screenshot");
-                Attachments2.pageSource();
-                Attachments2.browserConsoleLogs();
-                Attachments2.addVideo();
-            }
-        } else {
-            Attachments2.screenshotAs("Test screenshot");
-            Attachments2.pageSource();
-            Attachments2.browserConsoleLogs();
-        }
-        Selenide.closeWebDriver();
-    }
+
 }

@@ -50,7 +50,7 @@ public class Sm {
     @DisplayName("Get Bookings by Firstname")
     void getBookingsByFirstname() {
         // Десериализация ответа в объект BookingIds
-        BookingIds bookingResponse = given()
+        List<BookingId> bookingResponse = given()
                 .spec(BookingSpec.getRequestSpec())
                 .queryParam("firstname", "Jim")
                 .queryParam("lastname", "Brown")
@@ -59,18 +59,19 @@ public class Sm {
                 .then()
                 .spec(BookingSpec.getBookingListSpec())
                 .extract()
-                .as(BookingIds.class);
+                .body()
+                .jsonPath()
+                .getList("", BookingId.class);
 
-        // Извлекаем bookingid из каждого объекта в списке bookings
-        List<Integer> bookingIds = bookingResponse.getBookings().stream()
-                .map(BookingId::getBookingid)  // Для каждого объекта BookingId берем поле bookingid
+
+
+        List<Integer> bookingIds = bookingResponse.stream()
+                .map(BookingId::getBookingid)
                 .collect(Collectors.toList());
 
         log.info("Found booking IDs: {}", bookingIds);
-
-        // Проверка, что список bookingIds не пустой
         assertThat(bookingIds).isNotNull();
-        assertThat(bookingIds).isNotEmpty();  // Дополнительная проверка на непустоту списка
+        assertThat(bookingIds).isNotEmpty();
     }
 
 
@@ -132,25 +133,35 @@ public class Sm {
 
     }
     @Test
-    @Tag("booking")
-    @Tag("positive")
-    @Severity(SeverityLevel.NORMAL)
-    @DisplayName("Delete Booking by ID")
+    @DisplayName("Удаление бронирования по ID")
     void deleteBookingTest() {
-        int bookingId = 1;
-
+        int bookingId = createBookingAndGetId(); // 👈 вызываем создание
 
         String responseMessage = given()
                 .spec(BookingSpec.getRequestSpecWithToken(token))
                 .when()
-                .delete("/" + bookingId)
+                .delete("/booking/" + bookingId)
                 .then()
-                .statusCode(200)  // Проверка, что статус ответа 200
+                .statusCode(201)
                 .extract()
-                .asString();  // Получаем ответ как строку
+                .asString();
 
-        // Проверяем, что ответ "OK", что означает успешное удаление
-        assertEquals("OK", responseMessage, "Удаление бронирования не было успешным");
+        assertEquals("Created", responseMessage, "Удаление бронирования не было успешным");
+    }
+
+    int createBookingAndGetId() {
+        BookingDates bookingDates = new BookingDates("2018-01-01", "2019-01-01");
+        Booking booking = new Booking("Jim", "Brown", 111, true, bookingDates, "Breakfast");
+
+        return given()
+                .spec(BookingSpec.getRequestSpec())
+                .body(booking)
+                .when()
+                .post("/booking")
+                .then()
+                .extract()
+                .as(BookingResponse.class)
+                .getBookingid();
     }
 
 }
