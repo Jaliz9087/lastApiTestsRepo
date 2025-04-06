@@ -57,6 +57,7 @@ tasks.withType(JavaCompile) {
 
 tasks.withType(Test).configureEach {
     useJUnitPlatform()
+    systemProperty "allure.results.directory", "build/allure-results"
 
     testLogging {
         lifecycle {
