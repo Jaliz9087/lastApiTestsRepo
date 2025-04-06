@@ -73,4 +73,5 @@ tasks.register('allTests', Test) {
     useJUnitPlatform {
         includeTags("AllTests")
     }
+    systemProperty "allure.results.directory", "build/allure-results"
 }
