@@ -1,16 +1,20 @@
 {
   "base": {
-    "project": "${JOB_NAME}",
-    "environment": "${ENVIRONMENT}",
-    "comment": "bams",
-    "reportLink": "https://jenkins.autotests.cloud/job/whey-diplom-qaG",
+    "logo": "",
+    "project": "whey-WBTest-Diplom",
+    "environment": "Booker",
+    "comment": "=)",
+    "reportLink": "",
     "language": "en",
     "allureFolder": "allure-report",
-    "enableChart": true
+    "enableChart": true,
+    "enableSuitesPublishing": false,
+    "customData": {}
   },
   "telegram": {
     "token": "7520654153:AAE-KsQvfLFpgdcWwcWpEYsmWUgGmjyQwBg",
     "chat": "403946750",
-    "replyTo": ""
+    "replyTo": "",
+    "templatePath": "/templates/telegram.ftl"
   }
 }
