@@ -66,8 +66,8 @@ gradle clean AllTests
 
 ### **Удалённый запуск через Jenkins:**
 ```bash  
-gradle clean AllTests \
- BASE_URL
+gradle clean AllTests 
+
 ```
 
 ---
