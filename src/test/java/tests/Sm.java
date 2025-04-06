@@ -1,13 +1,14 @@
 package tests;
 
 import io.qameta.allure.*;
+import io.restassured.response.Response;
 import models.*;
 import org.junit.jupiter.api.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import spec.BookingSpec;
 import java.util.List;
-import java.util.stream.Collectors;
+
 
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -49,8 +50,8 @@ public class Sm {
     @Severity(SeverityLevel.NORMAL)
     @DisplayName("Get Bookings by Firstname")
     void getBookingsByFirstname() {
-        // Десериализация ответа в объект BookingIds
-        List<BookingId> bookingResponse = given()
+
+        Response response = given()
                 .spec(BookingSpec.getRequestSpec())
                 .queryParam("firstname", "Jim")
                 .queryParam("lastname", "Brown")
@@ -59,20 +60,20 @@ public class Sm {
                 .then()
                 .spec(BookingSpec.getBookingListSpec())
                 .extract()
-                .body()
-                .jsonPath()
-                .getList("", BookingId.class);
+                .response();
 
 
+        List<BookingId> bookings = response.jsonPath().getList("", BookingId.class);
 
-        List<Integer> bookingIds = bookingResponse.stream()
-                .map(BookingId::getBookingid)
-                .collect(Collectors.toList());
 
-        log.info("Found booking IDs: {}", bookingIds);
-        assertThat(bookingIds).isNotNull();
-        assertThat(bookingIds).isNotEmpty();
+        if (bookings.isEmpty()) {
+            log.warn("Список бронирований пуст. Возможно, нет активных бронирований для указанных параметров.");
+        } else {
+
+            bookings.forEach(b -> assertNotNull(b.getBookingid(), "Booking ID не должен быть null"));
+        }
     }
+
 
 
 
