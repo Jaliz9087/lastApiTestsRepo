@@ -17,6 +17,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @Epic("Booking API Tests")
 @Feature("CRUD operations")
+@Tag("AllTests")
 public class Sm {
     private static final Logger log = LoggerFactory.getLogger(Sm.class);
     private static String token;
