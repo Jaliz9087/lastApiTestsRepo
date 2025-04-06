@@ -83,7 +83,7 @@ gradle clean AllTests \
 ---
 ### **Тест кейсы**
 <p align="center">  
-<a href="https://jenkins.autotests.cloud/job/whey-diplom-qaG/40/allure/"><img src="images/screens/TC.png" width="950"/></a>  
+<a href="https://jenkins.autotests.cloud/job/whey-diplom-qaG/40/allure/"><img src="images/screens/ТС.png" width="950"/></a>  
 </p>
 
 ---
