@@ -1,13 +1,10 @@
 package tests;
 
-import com.codeborne.selenide.logevents.SelenideLogger;
+
 import config.DConf;
 import config.WDConf;
-
-import io.qameta.allure.selenide.AllureSelenide;
 import org.aeonbits.owner.ConfigFactory;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 
 public class WebTestBase {
 
@@ -24,13 +21,4 @@ public class WebTestBase {
         WDConf wdConf = new WDConf(dConf);
         wdConf.configure();
     }
-
-
-    @BeforeEach
-    void addSelenideListener() {
-        SelenideLogger.addListener("allure", new AllureSelenide());
-    }
-
-
-
 }

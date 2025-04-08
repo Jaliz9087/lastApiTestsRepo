@@ -9,9 +9,9 @@ import static com.codeborne.selenide.Browsers.CHROME;
 })
 public interface DConf extends Config {
 
-    @Key("baseUrl")
+    @Key("baseURI")
     @DefaultValue("https://restful-booker.herokuapp.com")
-    String getBaseUrl();
+    String getBaseURI();
 
     @Key("browser")
     @DefaultValue(CHROME)

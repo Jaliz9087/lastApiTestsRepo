@@ -33,12 +33,12 @@ public class Sm {
             request.setPassword("password123");
 
             Token authResponse = given()
-                    .spec(BookingSpec.getRequestSpec())
+                    .spec(BookingSpec.request)
                     .body(request)
                     .when()
-                    .post("/auth")
+                    .post("/]auth")
                     .then()
-                    .statusCode(200)
+                    .spec(BookingSpec.response200)
                     .extract()
                     .as(Token.class);
 
@@ -56,13 +56,13 @@ public class Sm {
     void getBookingsByFirstname() {
         step("Получаем список бронирований по имени и фамилии", () -> {
             Response response = given()
-                    .spec(BookingSpec.getRequestSpec())
+                    .spec(BookingSpec.request)
                     .queryParam("firstname", "Jim")
                     .queryParam("lastname", "Brown")
                     .when()
                     .get("/booking")
                     .then()
-                    .spec(BookingSpec.getBookingListSpec())
+                    .spec(BookingSpec.response200)
                     .extract()
                     .response();
 
@@ -89,12 +89,12 @@ public class Sm {
             Booking booking = new Booking("Jim", "Brown", 111, true, bookingDates, "Breakfast");
 
             bookingId = given()
-                    .spec(BookingSpec.getRequestSpec())
+                    .spec(BookingSpec.request)
                     .body(booking)
                     .when()
                     .post("/booking")
                     .then()
-                    .spec(BookingSpec.getBookingCreateSpec())
+                    .spec(BookingSpec.response200)
                     .extract()
                     .as(BookingResponse.class)
                     .getBookingid();
@@ -115,12 +115,13 @@ public class Sm {
             BookingUpdate updatedBooking = new BookingUpdate("James", "Brown", 150, false, newDates, "Late checkout");
 
             BookingUpdate response = given()
-                    .spec(BookingSpec.getRequestSpecWithToken(token))
+                    .spec(BookingSpec.request)
+                    .header("Cookie", "token=" + token)
                     .body(updatedBooking)
                     .when()
                     .put("/booking/" + bookingId)
                     .then()
-                    .spec(BookingSpec.getBookingUpdateSpec())
+                    .spec(BookingSpec.response200)
                     .extract()
                     .as(BookingUpdate.class);
 
@@ -145,11 +146,12 @@ public class Sm {
 
         step("Удаляем бронирование по ID", () -> {
             String responseMessage = given()
-                    .spec(BookingSpec.getRequestSpecWithToken(token))
+                    .spec(BookingSpec.request)
+                    .header("Cookie", "token=" + token)
                     .when()
                     .delete("/booking/" + bookingId)
                     .then()
-                    .statusCode(201)
+                    .spec(BookingSpec.response201)
                     .extract()
                     .asString();
 
@@ -163,11 +165,12 @@ public class Sm {
         Booking booking = new Booking("Jim", "Brown", 111, true, bookingDates, "Breakfast");
 
         return given()
-                .spec(BookingSpec.getRequestSpec())
+                .spec(BookingSpec.request)
                 .body(booking)
                 .when()
                 .post("/booking")
                 .then()
+                .spec(BookingSpec.response200)
                 .extract()
                 .as(BookingResponse.class)
                 .getBookingid();
