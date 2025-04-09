@@ -20,12 +20,4 @@ public class BookingSpec {
     public static ResponseSpecification response201 = new ResponseSpecBuilder()
             .expectStatusCode(201)
             .build();
-
-    public static ResponseSpecification response400 = new ResponseSpecBuilder()
-            .expectStatusCode(400)
-            .build();
-
-    public static ResponseSpecification response405 = new ResponseSpecBuilder()
-            .expectStatusCode(405)
-            .build();
 }

@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @Epic("Booking API Tests")
 @Feature("CRUD operations")
 @Tag("AllTests")
-public class Sm {
+public class Sm extends TestBase {
     private static final Logger log = LoggerFactory.getLogger(Sm.class);
     private static String token;
     private static int bookingId;
@@ -36,7 +36,7 @@ public class Sm {
                     .spec(BookingSpec.request)
                     .body(request)
                     .when()
-                    .post("/]auth")
+                    .post("/auth")
                     .then()
                     .spec(BookingSpec.response200)
                     .extract()

@@ -6,7 +6,7 @@ import config.WDConf;
 import org.aeonbits.owner.ConfigFactory;
 import org.junit.jupiter.api.BeforeAll;
 
-public class WebTestBase {
+public class TestBase {
 
     private boolean isRemote = Boolean.parseBoolean(System.getProperty("isRemote", "false"));
     private String environment = System.getProperty("env");
