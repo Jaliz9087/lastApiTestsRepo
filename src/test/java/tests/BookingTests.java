@@ -7,9 +7,8 @@ import org.junit.jupiter.api.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import spec.BookingSpec;
-
+import static org.hamcrest.Matchers.equalTo;
 import java.util.List;
-
 import static io.qameta.allure.Allure.step;
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -18,8 +17,8 @@ import static org.junit.jupiter.api.Assertions.*;
 @Epic("Booking API Tests")
 @Feature("CRUD operations")
 @Tag("AllTests")
-public class Sm extends TestBase {
-    private static final Logger log = LoggerFactory.getLogger(Sm.class);
+public class BookingTests extends TestBase {
+    private static final Logger log = LoggerFactory.getLogger(BookingTests.class);
     private static String token;
     private static int bookingId;
 
@@ -174,5 +173,31 @@ public class Sm extends TestBase {
                 .extract()
                 .as(BookingResponse.class)
                 .getBookingid();
+    }
+
+    @Test
+    @DisplayName("Частичное обновление бронирования по ID")
+    void partialUpdateBookingTest() {
+        step("Создаём бронирование для обновления", () -> {
+            bookingId = createBookingAndGetIdTest();
+        });
+
+        step("Частично обновляем бронирование по ID", () -> {
+            models.booking.PartialUpdateRequest payload = models.booking.PartialUpdateRequest.builder()
+                    .firstname("James")
+                    .lastname("Brown")
+                    .build();
+
+            given()
+                    .spec(BookingSpec.request)
+                    .header("Cookie", "token=" + token)
+                    .body(payload)
+                    .when()
+                    .patch("/booking/" + bookingId)
+                    .then()
+                    .spec(BookingSpec.response200)
+                    .body("firstname", equalTo(payload.getFirstname()))
+                    .body("lastname", equalTo(payload.getLastname()));
+        });
     }
 }
