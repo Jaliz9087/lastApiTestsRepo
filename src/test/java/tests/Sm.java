@@ -25,8 +25,8 @@ public class Sm extends TestBase {
 
     @BeforeAll
     @Severity(SeverityLevel.BLOCKER)
-    @DisplayName("Get Auth Token")
-    static void setToken() {
+    @DisplayName("Получаем токен авторизации")
+    static void setTokenTest() {
         step("Получаем токен авторизации", () -> {
             RequestCreateToken request = new RequestCreateToken();
             request.setUsername("admin");
@@ -52,8 +52,8 @@ public class Sm extends TestBase {
     @Tag("booking")
     @Tag("positive")
     @Severity(SeverityLevel.NORMAL)
-    @DisplayName("Get Bookings by Firstname")
-    void getBookingsByFirstname() {
+    @DisplayName("Получаем бронирование по имени  и фамилии")
+    void getBookingsByFirstnameTest() {
         step("Получаем список бронирований по имени и фамилии", () -> {
             Response response = given()
                     .spec(BookingSpec.request)
@@ -83,7 +83,7 @@ public class Sm extends TestBase {
     @Story("Create a new booking")
     @Description("Проверяем, что можно создать новое бронирование")
     @DisplayName("Создание бронирования")
-    void createBooking() {
+    void createBookingTest() {
         step("Создаём бронирование", () -> {
             BookingDates bookingDates = new BookingDates("2018-01-01", "2019-01-01");
             Booking booking = new Booking("Jim", "Brown", 111, true, bookingDates, "Breakfast");
@@ -108,8 +108,8 @@ public class Sm extends TestBase {
     @Tag("booking")
     @Tag("positive")
     @Severity(SeverityLevel.CRITICAL)
-    @DisplayName("Update Booking")
-    void updateBooking() {
+    @DisplayName("Обновление бронирования")
+    void updateBookingTest() {
         step("Обновляем бронирование", () -> {
             BookingDates newDates = new BookingDates("2022-01-01", "2022-01-10");
             BookingUpdate updatedBooking = new BookingUpdate("James", "Brown", 150, false, newDates, "Late checkout");
@@ -141,7 +141,7 @@ public class Sm extends TestBase {
     @DisplayName("Удаление бронирования по ID")
     void deleteBookingTest() {
         step("Создаём бронирование для удаления", () -> {
-            bookingId = createBookingAndGetId();
+            bookingId = createBookingAndGetIdTest();
         });
 
         step("Удаляем бронирование по ID", () -> {
@@ -160,7 +160,7 @@ public class Sm extends TestBase {
     }
 
     @Step("Создание бронирования через метод")
-    int createBookingAndGetId() {
+    int createBookingAndGetIdTest() {
         BookingDates bookingDates = new BookingDates("2018-01-01", "2019-01-01");
         Booking booking = new Booking("Jim", "Brown", 111, true, bookingDates, "Breakfast");
 

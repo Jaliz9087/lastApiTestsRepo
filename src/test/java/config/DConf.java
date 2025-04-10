@@ -30,6 +30,6 @@ public interface DConf extends Config {
     boolean remote();
 
     @Key("remoteUrl")
-    @DefaultValue("") // Optional, or set some fallback value
+    @DefaultValue("")
     String remoteUrl();
 }

@@ -8,13 +8,6 @@ import org.junit.jupiter.api.BeforeAll;
 
 public class TestBase {
 
-    private boolean isRemote = Boolean.parseBoolean(System.getProperty("isRemote", "false"));
-    private String environment = System.getProperty("env");
-    private WDConf wdConf;
-
-
-
-
     @BeforeAll
     static void configParams() {
         DConf dConf = ConfigFactory.create(DConf.class);

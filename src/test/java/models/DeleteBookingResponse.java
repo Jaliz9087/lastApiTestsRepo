@@ -4,5 +4,5 @@ import lombok.Data;
 
 @Data
 public class DeleteBookingResponse {
-    private String message; // "OK"
+    private String message;
 }
